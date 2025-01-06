@@ -5,7 +5,8 @@
     "options": {
         "cityWorkRadiusSqInitial": 15,
         "cityWorkRadiusSqTheologyBonus": 3,
-        "cityWorkRadiusSqMassTransitBonus": 6
+        "cityWorkRadiusSqMassTransitBonus": 6,
+        "cityAddToSizeMax": 8
     },
     "features": {
         "impetuousUnits": {

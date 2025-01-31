@@ -1,0 +1,110 @@
+{% if options.civilWar.enabled -%}
+{% for gov, chancePct in options.civilWar.governmentChanceModifierPct.items() %}
+[effect_civil_war_{{ gov | slugify }}]
+type    = "Civil_War_Chance"
+value   = {{ chancePct }}
+reqs    =
+    { "type", "name", "range"
+      "Gov", "{{ gov }}", "Player"
+    }
+{% endfor %}
+{%- endif %}
+
+{% for gov, maxRatesPct in options.governance.maxSliderRatesPct.items() %}
+[effect_max_rates_{{ gov | slugify }}]
+type    = "Max_Rates"
+value   = {{ maxRatesPct }}
+reqs    =
+    { "type", "name", "range", "quiet"
+      "Gov", "{{ gov }}", "Player", TRUE
+    }
+{% endfor %}
+
+{% for gov in options.governance.senate.goverments %}
+[effect_senate_{{ gov | slugify }}]
+type    = "Has_Senate"
+value   = 1
+reqs    =
+    { "type", "name", "range", "present"
+      "Gov", "{{ gov }}", "Player", TRUE
+      "Building", "Statue of Liberty", "Player", FALSE
+    }
+{% endfor %}
+
+{% if options.governance.senate.unitedNations -%}
+[effect_united_nations]
+type    = "Has_Senate"
+value   = 1
+reqs    =
+    { "type", "name", "range", "present", "survives"
+      "Building", "United Nations", "World", TRUE, FALSE
+{% if not features.explosiveExpansion.enabled -%}
+      "Building", "Manhattan Project", "World", TRUE, TRUE
+{% endif -%}
+      "Tech", "Nuclear Fission", "Player", TRUE, FALSE
+      "Building", "Apollo Program", "World", FALSE, TRUE
+    }
+{%- endif %}
+
+; Make it main capital -> value higher than that of Ecclesiastical Palace
+[effect_palace_3]
+type    = "Capital_City"
+value   = 2
+reqs    =
+    { "type", "name", "range"
+      "Building", "Palace", "City"
+    }
+
+[effect_palace_gov_center]
+type    = "Gov_Center"
+value	= 1
+reqs	=
+    { "type", "name", "range"
+      "Building", "Palace", "City"
+    }
+
+[effect_2nd_palace_gov_center]
+type    = "Gov_Center"
+value	= 1
+reqs	=
+    { "type", "name", "range", "present"
+      "Building", "Second Palace", "City", TRUE
+      "Building", "Palace", "City", FALSE
+    }
+
+{% set revolution = options.governance.revolution -%}
+{% if revolution.statueOfLibertyFastSwitching -%}
+[effect_statue_of_liberty_1]
+type    = "Any_Government"
+value   = 1
+reqs    =
+    { "type", "name", "range"
+      "Building", "Statue of Liberty", "Player"
+    }
+{%- endif %}
+
+{% set disorder = options.governance.revolution.disorderForcesAnarchy -%}
+{% if disorder.enabled -%}
+{% for gov, turns in disorder.turnsByGovernment.items() -%}
+[effect_revolution_{{ gov | slugify }}]
+type    = "Revolution_Unhappiness"
+value   = {{ turns }}
+reqs    =
+    { "type", "name", "range"
+      "Gov", "{{ gov }}", "Player"
+    }
+{% endfor %}
+
+[effect_united_nations_1]
+type    = "Revolution_Unhappiness"
+value   = {{ disorder.unitedNationsEnablesForAllGovs }}
+reqs    =
+    { "type", "name", "range", "present"
+      "Building", "United Nations", "World", TRUE
+; Without negated req UN would make revolution less likely instead
+; of enabling it with Democracy or Republic (value 2 -> 4 instead of 0 -> 2)
+      "Gov", "Democracy", "Player", FALSE
+      "Gov", "Republic", "Player", FALSE
+    }
+{%- endif %}
+

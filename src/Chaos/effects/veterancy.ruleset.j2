@@ -1,0 +1,115 @@
+{% set combat = options.units.veterancy.combatPromotionChanceBonusPct -%}
+[effect_combat_tribal]
+type    = "Veteran_Combat"
+value   = {{ combat.tribalLand }}
+reqs    =
+    { "type", "name", "range", "present", "quiet"
+      "Gov", "Tribal", "Player", TRUE, TRUE
+      "UnitClassFlag", "Land", "Local", TRUE, FALSE
+      "UnitFlag", "NonMil", "Local", FALSE, FALSE
+      "UnitFlag", "NoVeteran", "Local", FALSE, FALSE
+    }
+
+[effect_magellans_expedition_veteran]
+type    = "Veteran_Combat"
+value   = {{ combat.magellans }}
+reqs    =
+    { "type", "name", "range", "present"
+      "Building", "Magellan's Expedition", "Player", TRUE
+      "UnitClassFlag", "Sea", "Local", TRUE
+      "UnitFlag", "NonMil", "Local", FALSE
+      "UnitFlag", "NoVeteran", "Local", FALSE
+    }
+
+{% set initial = options.units.veterancy.initialLevelBonus -%}
+[effect_airport]
+type    = "Veteran_Build"
+value   = {{ initial.airport }}
+reqs    =
+    { "type", "name", "range", "present"
+      "Building", "Airport", "City", TRUE
+      "UnitClassFlag", "Air", "Local", TRUE
+      "UnitFlag", "NonMil", "Local", FALSE
+      "UnitFlag", "NoVeteran", "Local", FALSE
+    }
+
+{% for building in ["Barracks", "Barracks II", "Barracks III"] %}
+[effect_{{ building | slugify }}_veteran]
+type    = "Veteran_Build"
+value   = {{ initial.barracks }}
+reqs    =
+    { "type", "name", "range", "present"
+      "Building", "{{ building }}", "City", TRUE
+      "UnitClassFlag", "Land", "Local", TRUE
+      "UnitFlag", "NonMil", "Local", FALSE
+      "UnitFlag", "NoVeteran", "Local", FALSE
+    }
+{% endfor %}
+
+[effect_port_facility]
+type    = "Veteran_Build"
+value   = {{ initial.portFacility }}
+reqs    =
+    { "type", "name", "range", "present"
+      "Building", "Port Facility", "City", TRUE
+      "UnitClassFlag", "Sea", "Local", TRUE
+      "UnitFlag", "NonMil", "Local", FALSE
+      "UnitFlag", "NoVeteran", "Local", FALSE
+    }
+
+[effect_port_facility_guangzhou]
+type    = "Veteran_Build"
+value   = {{ initial.guangzhou }}
+reqs    =
+    { "type", "name", "range", "present"
+      "Building", "Port of Guangzhou", "City", TRUE
+      "UnitClassFlag", "Sea", "Local", TRUE
+      "UnitFlag", "NonMil", "Local", FALSE
+      "UnitFlag", "NoVeteran", "Local", FALSE
+    }
+
+[effect_lighthouse_veteran]
+type    = "Veteran_Build"
+value   = {{ initial.lighthouse }}
+reqs    =
+    { "type", "name", "range", "present"
+      "Building", "Lighthouse", "Player", TRUE
+      "UnitClassFlag", "Sea", "Local", TRUE
+      "UnitFlag", "NonMil", "Local", FALSE
+      "UnitFlag", "NoVeteran", "Local", FALSE
+      "Building", "Port Facility", "City", FALSE
+	  "Building", "Port of Guangzhou", "City", FALSE
+    }
+
+[effect_sun_tzus_war_academy]
+type    = "Veteran_Build"
+value   = {{ initial.sunTzus }}
+reqs    =
+    { "type", "name", "range", "present"
+      "Building", "Sun Tzu's War Academy", "Player", TRUE
+      "UnitClassFlag", "Land", "Local", TRUE
+      "UnitFlag", "NonMil", "Local", FALSE
+      "UnitFlag", "NoVeteran", "Local", FALSE
+    }
+
+[effect_terracotta_army]
+type    = "Veteran_Build"
+value   = {{ initial.terracotta }}
+reqs    =
+    { "type", "name", "range", "present"
+      "Building", "Terracotta Army", "City", TRUE
+      "UnitClassFlag", "Land", "Local", TRUE
+      "UnitFlag", "NonMil", "Local", FALSE
+      "UnitFlag", "NoVeteran", "Local", FALSE
+    }
+
+[effect_academy]
+type  = "Veteran_Build"
+value = {{ initial.academy }}
+reqs  =
+    { "type", "name", "range", "present"
+       "Building", "Academy", "City", TRUE
+       "UnitFlag", "NonMil", "Local", TRUE
+       "UnitFlag", "NoVeteran", "Local", FALSE
+    }
+

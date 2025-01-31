@@ -1,0 +1,88 @@
+{% set growth = options.cities.growth -%}
+
+{% set aqueducts = ["Aqueduct", "Aqueduct, Lake", "Aqueduct, River"] -%}
+
+{% macro size_adjust(adj) -%}
+type = "{{ "Size_Unlimit" if adj == "unlimited" else "Size_Adj" }}"
+value = {{ 1 if adj == "unlimited" else adj }}
+{%- endmacro -%}
+
+; Base max city size of 8
+[effect_aqueduct_base]
+{{ size_adjust(growth.maxSize.base) }}
+
+{% for aqueduct1 in aqueducts -%}
+; Max city size 8 + 8 = 16
+[effect_aqueduct_{{ aqueduct1 | slugify }}]
+{{ size_adjust(growth.maxSize.aqueductBonus) }}
+reqs =
+    { "type", "name", "range", "present"
+{% for aqueduct2 in aqueducts -%}
+      "Building", "{{ aqueduct2 }}", "City", {{ aqueduct1 == aqueduct2 }}
+{% endfor %}
+    }
+
+[effect_sewer_system_{{ aqueduct1 | slugify }}]
+{{ size_adjust(growth.maxSize.sewerSystemBonus) }}
+reqs =
+    { "type", "name", "range"
+      "Building", "Sewer System", "City"
+      "Building", "{{ aqueduct1 }}", "City"
+    }
+{% endfor %}
+
+{% set retained = growth.granary.foodRetainedOnGrowth -%}
+; Free Granary effect in small cities
+[effect_granary_base]
+type    = "Growth_Food"
+value   = {{ retained.smallCityBonusPct }}
+reqs   =
+    { "type", "name", "range", "present"
+      "MinSize", "{{ retained.smallCitySizeMax + 1 }}", "City", FALSE
+      "Building", "Granary", "City", FALSE
+    }
+
+; Granary size fixed to 10
+[effect_granary_0]
+type    = "Growth_Food"
+value   = {{ retained.granaryBonusPct }}
+reqs    =
+    { "type", "name", "range", "present"
+      "Building", "Granary", "City", TRUE
+    }
+
+[effect_blah_to_wasting_food]
+type  = "Growth_Surplus_Pct"
+value = {{ retained.surplusPct }}
+
+{% if growth.fromCelebration.enabled -%}
+{% if growth.fromCelebration.inRepublic -%}
+[effect_rapture_republic]
+type    = "Rapture_Grow"
+value   = 1
+reqs	=
+    { "type", "name",     "range"
+      "Gov",  "Republic", "Player"
+    }
+{% endif -%}
+
+{% if growth.fromCelebration.inDemocracy -%}
+[effect_rapture_democracy]
+type    = "Rapture_Grow"
+value   = 1
+reqs	=
+    { "type", "name",      "range"
+      "Gov",  "Democracy", "Player"
+    }
+{% endif -%}
+
+{% if growth.fromCelebration.atPyramids -%}
+[effect_rapture_pyramids]
+type    = "Rapture_Grow"
+value   = 1
+reqs	=
+    { "type",     "name",     "range"
+      "Building", "Pyramids", "City"
+    }
+{% endif -%}
+{% endif -%}

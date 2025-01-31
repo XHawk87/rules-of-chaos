@@ -1,0 +1,100 @@
+; Cities can work all accessible tiles
+[effect_tile_workable]
+type    = "Tile_Workable"
+value   = 1
+reqs    =
+    { "type",        "name",       "range", "present"
+      "TerrainFlag", "Unworkable", "Local", FALSE
+    }
+
+; Inaccessible tiles are unworkable
+[effect_tile_unworkable]
+type    = "Tile_Workable"
+value   = -999
+reqs    =
+    { "type",        "name",       "range", "present"
+      "TerrainFlag", "Unworkable", "Local", TRUE
+    }
+
+{% set batch = options.cities.production.unitBatchProduction -%}
+{% if batch.enabled -%}
+; each city has at least one slot to build units
+[effect_city_build_slots_basic]
+type    = "City_Build_Slots"
+value   = {{ batch.baseBatchSize }}
+
+; Mfg. Plant => 4 slots total
+[effect_city_build_slots_mfg_plant]
+type    = "City_Build_Slots"
+value   = {{ batch.manufacturingPlantBonus }}
+reqs    =
+    { "type", "name", "range"
+      "Building", "Mfg. Plant", "City"
+    }
+{%- endif %}
+
+; free granary, etc, runs out
+[effect_city_image_1]
+type    = "City_Image"
+value   = 1
+reqs    =
+    { "type", "name", "range"
+      "MinSize", "5", "City"
+    }
+
+; needs Aqueduct
+[effect_city_image_2]
+type    = "City_Image"
+value   = 1
+reqs    =
+    { "type", "name", "range"
+      "MinSize", "9", "City"
+    }
+
+[effect_city_image_3]
+type    = "City_Image"
+value   = 1
+reqs    =
+    { "type", "name", "range"
+      "MinSize", "13", "City"
+    }
+
+; needs Sewer System
+[effect_city_image_4]
+type    = "City_Image"
+value   = 1
+reqs    =
+    { "type", "name", "range"
+      "MinSize", "17", "City"
+    }
+
+[effect_city_walls_visible]
+type    = "Visible_Walls"
+value   = 1
+reqs    =
+    { "type", "name", "range"
+      "Building", "City Walls", "City"
+    }
+
+{% set workRadiusSq = options.cities.workRadiusSq -%}
+; City radius at start = {{ workRadiusSq.initial }}
+
+; City radius increased with Mass Transit before Theology
+[effect_mass_transit_work_area]
+type    = "City_Radius_Sq"
+value   = {{ workRadiusSq.massTransitBonus }}
+reqs    =
+    { "type",     "name",         "range",  "present"
+      "Building", "Mass Transit", "City",   TRUE
+    }
+
+; City radius increased after Theology
+[effect_theology_work_area]
+type    = "City_Radius_Sq"
+value   = {{ workRadiusSq.theologyBonus }}
+reqs    =
+    { "type",     "name",         "range",  "present"
+      "Tech",     "Theology",     "Player", TRUE
+    }
+
+

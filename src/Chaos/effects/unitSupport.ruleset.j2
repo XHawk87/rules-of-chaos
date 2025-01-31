@@ -1,0 +1,142 @@
+{% set upkeep = options.units.upkeep -%}
+{% for gov, factor in upkeep.byGov.items() %}
+[effect_base_unit_upkeep_gold_{{ gov | slugify }}]
+type    = "Upkeep_Factor"
+value   = {{ factor.multiplier.gold }}
+reqs    =
+    { "type", "name", "range", "present"
+      "OutputType", "Gold", "Local", TRUE
+      "Gov", "{{ gov }}", "Player", TRUE
+    }
+
+[effect_base_unit_upkeep_shield_{{ gov | slugify }}]
+type    = "Upkeep_Factor"
+value   = {{ factor.multiplier.shields }}
+reqs    =
+    { "type", "name", "range", "present"
+      "OutputType", "Shield", "Local", TRUE
+      "Gov", "{{ gov }}", "Player", TRUE
+    }
+
+[effect_base_unit_upkeep_food_{{ gov | slugify }}]
+type    = "Upkeep_Factor"
+value   = {{ factor.multiplier.food | default(upkeep.multiplier.food) }}
+reqs    =
+    { "type", "name", "range"
+      "OutputType", "Food", "Local"
+    }
+
+[effect_unit_unhappiness_{{ gov | slugify }}]
+type    = "Unhappy_Factor"
+value   = {{ factor.multiplier.happiness }}
+reqs    =
+    { "type", "name", "range", "present"
+      "Gov", "{{ gov }}", "Player", FALSE
+    }
+
+{% for size, content in factor.freePerCity.fromSize.happiness.items() %}
+[effect_upkeep_free_mil_city_{{ gov | slugify }}_from{{ size }}]
+type    = "Make_Content_Mil"
+value   = {{ content }}
+reqs    =
+    { "type", "name", "range", "present"
+      "MinSize", "{{ size }}", "City", TRUE
+      "Gov", "{{ gov }}", "Player", TRUE
+    }
+{% endfor %}
+
+[effect_police_station_{{ gov | slugify }}]
+type    = "Make_Content_Mil"
+value   = {{ factor.freePerCity.policeStation | default(upkeep.freePerCity.policeStation) }}
+reqs    =
+    { "type", "name", "range"
+      "Building", "Police Station", "City"
+      "Gov", "{{ gov }}", "Player"
+    }
+
+{% set shieldsFromSize = factor.freePerCity.fromSize.shields | default(upkeep.freePerCity.fromSize.shields) %}
+{% for size, shields in shieldsFromSize.items() %}
+[effect_free_shield_upkeep_{{ gov | slugify }}_from{{ size }}]
+type    = "Unit_Upkeep_Free_Per_City"
+value   = {{ shields }}
+reqs    =
+    { "type", "name", "range"
+      "Gov", "{{ gov }}", "Player"
+      "MinSize", "{{ size }}", "City"
+      "OutputType", "Shield", "Local"
+    }
+{% endfor %}
+
+{% set goldFromSize = factor.freePerCity.fromSize.gold | default(upkeep.freePerCity.fromSize.gold) %}
+{% for size, gold in goldFromSize.items() %}
+[effect_upkeep_free_units_{{ gov | slugify }}_from{{ size }}]
+type  = "Unit_Upkeep_Free_Per_City"
+value = {{ gold }}
+reqs  =
+    { "type",       "name",      "range",  "quiet"
+      "Gov",        "{{ gov }}", "Player", TRUE
+      "MinSize",    "9",         "City",   FALSE
+      "OutputType", "Gold",      "Local",  FALSE
+    }
+{% endfor %}
+{% endfor %}
+
+[effect_king_richards_crusade]
+type    = "Make_Content_Mil"
+value   = {{ upkeep.freePerCity.kingRichards.happiness }}
+reqs    =
+    { "type", "name", "range"
+      "Building", "King Richard's Crusade", "Player"
+    }
+
+[effect_king_richards_crusade_1]
+type    = "Unit_Upkeep_Free_Per_City"
+value   = {{ upkeep.freePerCity.kingRichards.gold }}
+reqs    =
+    { "type", "name", "range"
+      "Building", "King Richard's Crusade", "Player"
+      "OutputType", "Gold", "Local"
+    }
+
+; Note that this doesn't cancel a whole unit's unhappiness in Democracy
+[effect_statue_of_zeus]
+type    = "Make_Content_Mil"
+value   = {{ upkeep.freePerCity.statueOfZeus.happiness }}
+reqs    =
+    { "type", "name", "range"
+      "Building", "Statue of Zeus", "Player"
+    }
+
+[effect_statue_of_zeus_1]
+type    = "Unit_Upkeep_Free_Per_City"
+value   = {{ upkeep.freePerCity.statueOfZeus.shields }}
+reqs    =
+    { "type", "name", "range"
+      "Building", "Statue of Zeus", "Player"
+      "OutputType", "Shield", "Local"
+    }
+
+; Food upkeep
+{% set food = upkeep.freePerCity.fromSize.food -%}
+; Any city can support up to four units...
+[effect_upkeep_free_units_food_base]
+type    = "Unit_Upkeep_Free_Per_City"
+value   = {{ food.base }}
+reqs    =
+    { "type", "name", "range"
+      "OutputType", "Food", "Local"
+    }
+
+; ...or its size, whichever is bigger. Units above this limit have a
+; food penalty.
+{% for size in range(food.fromSize, food.toSize) %}
+[effect_upkeep_free_units_food_{{ size }}]
+type    = "Unit_Upkeep_Free_Per_City"
+value   = {{ food.perSize }}
+reqs    =
+    { "type", "name", "range"
+      "OutputType", "Food", "Local"
+      "MinSize", "{{ size }}", "City"
+    }
+{% endfor %}
+

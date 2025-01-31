@@ -1,0 +1,69 @@
+; Modifying this file:
+; You should not modify this file except to make bugfixes or
+; for other "maintenance".  If you want to make custom changes,
+; you should create a new datadir subdirectory and copy this file
+; into that directory, and then modify that copy.  Then use the
+; command "rulesetdir <mysubdir>" in the server to have freeciv
+; use your new customized file.
+
+; Note that the freeciv AI may not cope well with anything more
+; than minor changes.
+
+{%- macro build_options() -%}
+    {{ varargs | select("ne", "") | join(' ') }}
+{%- endmacro %}
+
+[datafile]
+description="Longturn Traditional based on Civ2Civ3 effects data for Freeciv"
+options="{{ build_options(
+    "+Freeciv-ruleset-Devel-2017.Jan.02",
+    "+Bombard_Limit_Pct",
+    "+Nation_Intelligence",
+    "+Vision_Layer"
+) }}"
+format_version=20
+
+; /* <-- avoid gettext warnings
+;
+; Effects
+;
+; type                    = What the effect does. Values of multiple active effects
+;                           of the same type get summed for the total.
+;                           See README.effects for list of possible types
+; value                   = Value added for the effect type when this effect is active,
+;                           i.e., all requirements are fulfilled
+; multiplier              = Name of the policy that gives a multiplier for effect's value
+; reqs                    = Requirements for the effect to be active.
+;                           See README.effects for help on requirements
+;
+; */ <-- avoid gettext warnings
+
+*include "Chaos/effects/ai.ruleset"
+*include "Chaos/effects/chronology.ruleset"
+*include "Chaos/effects/cities.ruleset"
+*include "Chaos/effects/combat.ruleset"
+*include "Chaos/effects/culture.ruleset"
+*include "Chaos/effects/defence.ruleset"
+*include "Chaos/effects/espionage.ruleset"
+*include "Chaos/effects/food.ruleset"
+*include "Chaos/effects/gold.ruleset"
+*include "Chaos/effects/governance.ruleset"
+*include "Chaos/effects/growth.ruleset"
+*include "Chaos/effects/happiness.ruleset"
+*include "Chaos/effects/healing.ruleset"
+*include "Chaos/effects/illness.ruleset"
+*include "Chaos/effects/movement.ruleset"
+*include "Chaos/effects/nuclear.ruleset"
+*include "Chaos/effects/pollution.ruleset"
+*include "Chaos/effects/production.ruleset"
+*include "Chaos/effects/science.ruleset"
+*include "Chaos/effects/space.ruleset"
+*include "Chaos/effects/trade.ruleset"
+*include "Chaos/effects/unitSupport.ruleset"
+*include "Chaos/effects/unitUpgrades.ruleset"
+*include "Chaos/effects/veterancy.ruleset"
+{% if features.blindWorld.enabled -%}
+*include "Chaos/effects/vision-blindWorld.ruleset"
+{% else -%}
+*include "Chaos/effects/vision.ruleset"
+{%- endif %}

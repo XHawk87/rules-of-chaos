@@ -3,20 +3,16 @@ ltpass*
 */input*
 */output
 */core.*
-*/freeciv-score.log
-
-*.orig
-*.rej
-*.swp
-
-Chaos/
-Chaos.serv
 freeciv-score.log
 *.sav
 *.sav.gz
 *.log
 *.zip
 
-__pycache__/
-testbuild/
+*.orig
+*.rej
+*.swp
 
+__pycache__/
+game/
+.idea/

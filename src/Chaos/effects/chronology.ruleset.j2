@@ -1,0 +1,42 @@
+{% set chrono = options.chronology -%}
+{% if options.victory.spaceRace.enabled -%}
+[effect_plastics_slowdown]
+type    = "Slow_Down_Timeline"
+value   = 1
+reqs    =
+    { "type", "name", "range", "survives"
+      "Tech", "Plastics", "World", TRUE
+    }
+
+[effect_superconductor_slowdown]
+type    = "Slow_Down_Timeline"
+value   = 1
+reqs    =
+    { "type", "name", "range", "survives"
+      "Tech", "Superconductors", "World", TRUE
+    }
+
+[effect_spaceflight_slowdown]
+type    = "Slow_Down_Timeline"
+value   = 1
+reqs    =
+    { "type", "name", "range", "survives"
+      "Tech", "Space Flight", "World", TRUE
+    }
+{%- endif %}
+
+{% for step in chrono.steps -%}
+[effect_calendar_{{ loop.index }}]
+type    = "Turn_Years"
+value   = {{ (step.step if step.step is defined else
+             (step.to - step.from) / step.turns) | int }}
+reqs    =
+    { "type", "name", "range", "present"
+      {% if step.from is defined -%}
+      "MinYear", "{{ step.from }}", "World", TRUE
+      {%- endif %}
+      {% if step.to is defined -%}
+      "MinYear", "{{ step.to }}", "World", FALSE
+      {%- endif %}
+    }
+{% endfor %}

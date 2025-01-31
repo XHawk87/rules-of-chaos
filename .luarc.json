@@ -1,0 +1,15 @@
+{
+    "diagnostics.globals": [
+        "NIL",
+        "signal",
+        "whole_map_iterate",
+        "random",
+        "_",
+        "log",
+        "find",
+        "notify",
+        "features",
+        "E",
+        "game"
+    ]
+}

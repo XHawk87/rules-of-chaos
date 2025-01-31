@@ -1,0 +1,55 @@
+{% set healthBonus = options.cities.illness.healthBonusPct -%}
+
+; Medicine increases city health
+[effect_unit_recover_medicine]
+type    = "Health_Pct"
+value   = {{ healthBonus.medicine }}
+reqs    =
+    { "type", "name", "range"
+      "Tech", "Medicine", "Player"
+    }
+
+[effect_aqueduct_1]
+type    = "Health_Pct"
+value   = {{ healthBonus.aqueduct }}
+reqs    =
+    { "type", "name", "range"
+      "Building", "Aqueduct", "City"
+    }
+
+[effect_aqueduct_river_1]
+type    = "Health_Pct"
+value   = {{ healthBonus.aqueduct }}
+reqs    =
+    { "type", "name", "range", "present"
+      "Building", "Aqueduct, River", "City", TRUE
+      "Building", "Aqueduct", "City", FALSE
+    }
+
+
+[effect_aqueduct_lake_1]
+type    = "Health_Pct"
+value   = {{ healthBonus.aqueduct }}
+reqs    =
+    { "type", "name", "range", "present"
+      "Building", "Aqueduct, Lake", "City", TRUE
+      "Building", "Aqueduct", "City", FALSE
+      "Building", "Aqueduct, River", "City", FALSE
+    }
+
+[effect_sewer_system_health]
+type    = "Health_Pct"
+value   = {{ healthBonus.sewerSystem }}
+reqs    =
+    { "type", "name", "range"
+      "Building", "Sewer System", "City"
+    }
+
+[effect_cure_for_cancer_health]
+type    = "Health_Pct"
+value   = {{ healthBonus.cureForCancer }}
+reqs    =
+    { "type", "name", "range"
+      "Building", "Cure For Cancer", "Player"
+    }
+

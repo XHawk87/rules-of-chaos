@@ -1,0 +1,152 @@
+{% set terrain = options.terrain.movement -%}
+{% set units = options.units.movement -%}
+; Movement penalty if ended turn at mountains (for every land unit)
+[effect_mountains_movement_land]
+type    = "Move_Bonus"
+value   = -{{ terrain.mountainStartPenalty }}
+reqs    =
+    { "type", "name", "range", "present"
+      "Terrain", "Mountains", "Local", TRUE
+      "UnitClassFlag", "Land", "Local", TRUE
+      "Extra", "Road", "Local", FALSE
+	  "UnitFlag", "IgTer", "Local", FALSE
+    }
+
+; Nuclear power gives +1 moves to sea units
+[effect_nuclear_powered]
+type    = "Move_Bonus"
+value   = {{ units.nuclearBoatBonus }}
+reqs    =
+    { "type", "name", "range"
+      "Tech", "Nuclear Power", "Player"
+      "UnitClassFlag", "Sea", "Local"
+    }
+
+; Fusion power gives +6 moves to sea units
+[effect_fusion_powered]
+type    = "Move_Bonus"
+value   = {{ units.fusionBoatBonus }}
+reqs    =
+    { "type", "name", "range"
+      "Tech", "Fusion Power", "Player"
+      "UnitClassFlag", "Sea", "Local"
+    }
+
+[effect_lighthouse_trireme_move]
+type    = "Move_Bonus"
+value   = {{ units.lighthouseBonus }}
+reqs    =
+    { "type", "name", "range", "present"
+      "Building", "Lighthouse", "Player", TRUE
+      "UnitClassFlag", "Sea", "Local", TRUE
+; No move bonus to Triremes starting their turn on rivers
+; We also disable move bonus for city tiles in this clause...
+      "Extra", "River", "Local", FALSE
+      "CityTile", "Center", "Local", FALSE
+    }
+
+; ...so that we can use this one to avoid penalising Triremes which start
+; in a perfectly legal coastal city which also happens to be on a river
+[effect_lighthouse_trireme_move_2]
+type    = "Move_Bonus"
+value   = {{ units.lighthouseBonus }}
+reqs    =
+    { "type", "name", "range"
+      "Building", "Lighthouse", "Player"
+      "UnitClassFlag", "Sea", "Local"
+      "CityTile", "Center", "Local"
+      "TerrainClass", "Oceanic", "Adjacent"
+    }
+
+[effect_magellans_expedition_move]
+type    = "Move_Bonus"
+value   = {{ units.magellanBonus }}
+reqs    =
+    { "type", "name", "range", "present"
+      "Building", "Magellan's Expedition", "Player", TRUE
+      "UnitClassFlag", "Sea", "Local", TRUE
+      "UnitClass", "Trireme", "Local", FALSE
+    }
+
+; Advanced Flight enables movement of nuclear weapons
+[effect_nuclear_bomber1]
+type    = "Move_Bonus"
+value   = {{ units.nukeAdvancedFlightBonus }}
+reqs    =
+    { "type", "name", "range"
+      "Tech", "Advanced Flight", "Player"
+      "UnitType", "Nuclear", "Local"
+    }
+
+; Advanced Flight enables movement of nuclear weapons
+[effect_nuclear_bomber2]
+type    = "Move_Bonus"
+value   = {{ units.nukeAdvancedFlightBonus }}
+reqs    =
+    { "type", "name", "range"
+      "Tech", "Advanced Flight", "Player"
+      "UnitType", "Nuclear Bomb", "Local"
+    }
+
+; Rocketry doubles movement of nuclear weapons
+[effect_nuclear_missile1]
+type    = "Move_Bonus"
+value   = {{ units.nukeRocketryBonus }}
+reqs    =
+    { "type", "name", "range"
+      "Tech", "Rocketry", "Player"
+      "UnitType", "Nuclear", "Local"
+    }
+
+; Rocketry doubles movement of nuclear weapons
+[effect_nuclear_missile2]
+type    = "Move_Bonus"
+value   = {{ units.nukeRocketryBonus }}
+reqs    =
+    { "type", "name", "range"
+      "Tech", "Rocketry", "Player"
+      "UnitType", "Nuclear Bomb", "Local"
+    }
+
+[effect_airport_2]
+type    = "Airlift"
+value   = 1
+reqs    =
+    { "type", "name", "range"
+      "Building", "Airport", "City"
+    }
+
+[effect_action_success_move_cost_capture]
+type    = "Action_Success_Actor_Move_Cost"
+value   = 6
+reqs    =
+    { "type", "name", "range", "present"
+      "Action", "Capture Units", "Local", TRUE
+    }
+
+[effect_action_success_move_cost_bombard]
+type    = "Action_Success_Actor_Move_Cost"
+value   = 65535
+reqs    =
+    { "type", "name", "range", "present"
+      "Action", "Bombard", "Local", TRUE
+    }
+
+[effect_action_success_move_cost_from_non_native]
+type    = "Action_Success_Actor_Move_Cost"
+value   = 65535
+reqs    =
+    { "type",      "name",                  "range", "present"
+      "Action",    "Transport Disembark 2", "Local", TRUE
+      "UnitState", "OnNativeTile",          "Local", TRUE
+    }
+
+[effect_action_success_conquer_cost_from_non_native]
+type    = "Action_Success_Actor_Move_Cost"
+value   = 65535
+reqs    =
+    { "type",      "name",           "range", "present"
+      "UnitState", "OnNativeTile",   "Local", TRUE
+      "Action",    "Conquer City 2", "Local", TRUE
+    }
+

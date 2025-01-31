@@ -1,0 +1,28 @@
+{% set routes = options.tradeRoutes -%}
+
+[effect_trade_routes]
+type    = "Max_Trade_Routes"
+value   = {{ routes.maxNumberOfRoutes }}
+
+;pow(2, value/1000) -> Base = 50% 
+[effect_base_trade_revenue_reduce]
+type    = "Trade_Revenue_Bonus"
+value   = {{ routes.tradeRevenueExponentPerThousand.base }}
+
+;Total = 25%
+[effect_railroad_trade_revenue_reduce]
+type    = "Trade_Revenue_Bonus"
+value   = {{ routes.tradeRevenueExponentPerThousand.railroad }}
+reqs    =
+    { "type", "name", "range"
+      "Tech", "Railroad", "Player"
+    }
+
+[effect_enter_marketplace_bonus_reduction]
+type	= "Trade_Revenue_Bonus"
+value	= {{ routes.tradeRevenueExponentPerThousand.onEnterMarketplace }}
+reqs	=
+    { "type", "name", "range"
+      "Action", "Enter Marketplace", "Local"
+    }
+

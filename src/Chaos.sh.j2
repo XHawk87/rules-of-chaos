@@ -1,0 +1,8 @@
+#!/bin/sh
+
+export GAMEID={{ game.id }}
+export GAMENAME={{ game.name }}
+export GAMEDIR="$(realpath "$0")"
+export PORT={{ game.port }}
+
+. ../rc.subr.fc21

@@ -1,0 +1,60 @@
+{% set upgrades = options.units.upgrades -%}
+; Invention makes unit upgrade prices 20% less expensive
+[effect_upgrade_price_halfed]
+type    = "Upgrade_Price_Pct"
+value   = -{{ upgrades.inventionCostReduction }}
+reqs    =
+    { "type", "name", "range"
+      "Tech", "Invention", "Player"
+    }
+
+; Robotics makes unit upgrade prices 30% less expensive
+[effect_upgrade_price_halfed_2]
+type    = "Upgrade_Price_Pct"
+value   = -{{ upgrades.roboticsCostReduction }}
+reqs    =
+    { "type", "name", "range"
+      "Tech", "Robotics", "Player"
+    }
+
+[effect_unit_shield_value_in_upgrade_price_calc]
+type    = "Unit_Shield_Value_Pct"
+value   = {{ upgrades.shield2GoldFactorPct - 100 }}
+reqs    =
+    { "type",   "name",         "range", "present"
+      "Action", "Upgrade Unit", "Local", TRUE
+    }
+
+{% set free = options.units.upgrades.freeUpgradesPerTurn -%}
+[effect_espionage_upgrade]
+type    = "Upgrade_Unit"
+value   = {{ free.espionageBonus }}
+reqs    =
+    { "type", "name", "range"
+      "Tech", "Espionage", "World"
+    }
+
+[effect_radio_upgrade]
+type    = "Upgrade_Unit"
+value   = {{ free.radioBonus }}
+reqs    =
+    { "type", "name", "range"
+      "Tech", "Radio", "World"
+    }
+
+[effect_verrocchios_workshop]
+type    = "Upgrade_Unit"
+value   = {{ free.verrochios }}
+reqs    =
+    { "type", "name", "range"
+      "Building", "Verrocchio's Workshop", "Player"
+    }
+
+[effect_leonardos_workshop]
+type    = "Upgrade_Unit"
+value   = {{ free.leonardos }}
+reqs    =
+    { "type", "name", "range"
+      "Building", "Leonardo's Workshop", "Player"
+    }
+

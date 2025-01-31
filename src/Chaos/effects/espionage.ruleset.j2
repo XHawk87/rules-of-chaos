@@ -1,0 +1,329 @@
+{% set veterancy = options.espionage.veterancy -%}
+[effect_veteran_communism]
+type    = "Veteran_Build"
+value   = {{ veterancy.communismBonus }}
+reqs    =
+    { "type", "name", "range"
+      "Gov", "Communism", "Player"
+      "UnitFlag", "Diplomat", "Local"
+    }
+
+[effect_veteran_federation]
+type    = "Veteran_Build"
+value   = {{ veterancy.federationBonus }}
+reqs    =
+    { "type", "name", "range"
+      "Gov", "Federation", "Player"
+      "UnitFlag", "Diplomat", "Local"
+    }
+
+{% set inciteCost = options.espionage.inciteCity.inciteCost -%}
+[effect_courthouse_incite]
+type    = "Incite_Cost_Pct"
+value	= {{ inciteCost.courthousePct }}
+reqs	=
+    { "type", "name", "range", "present"
+      "Building", "Courthouse", "City", TRUE
+      "MaxUnitsOnTile", "0", "Local", FALSE
+    }
+
+[effect_incite_cost_empty_courthouse]
+type = "Incite_Cost_Pct"
+value = {{ inciteCost.emptyCourthousePct }}
+reqs	=
+    { "type", "name", "range", "present"
+      "MaxUnitsOnTile", "0", "Local", TRUE
+      "Building", "Courthouse", "City", TRUE
+    }
+
+[effect_incite_cost_empty]
+type = "Incite_Cost_Pct"
+value = {{ inciteCost.emptyPct }}
+reqs	=
+    { "type", "name", "range", "present"
+      "MaxUnitsOnTile", "0", "Local", TRUE
+      "Building", "Courthouse", "City", FALSE
+    }
+
+{% set spyResist = options.espionage.diplomaticBattle.defenceBonusPct %}
+[effect_palace_2]
+type    = "Spy_Resistant"
+value   = {{ spyResist.palace }}
+reqs    =
+    { "type", "name", "range"
+      "Building", "Palace", "City"
+    }
+
+[effect_2nd_palace_2]
+type    = "Spy_Resistant"
+value   = {{ spyResist.palace }}
+reqs    =
+    { "type", "name", "range", "present"
+      "Building", "Second Palace", "City", TRUE
+      "Building", "Palace", "City", FALSE
+    }
+
+[effect_academy1]
+type  = "Spy_Resistant"
+value = {{ spyResist.academy }}
+reqs  =
+    { "type", "name", "range"
+       "Building", "Academy", "City"
+    }
+
+{% set sabotageResist = options.espionage.sabotage.defenceBonusPct %}
+[effect_palace_2_sabotage]
+type    = "Building_Saboteur_Resistant"
+value   = {{ sabotageResist.palace }}
+reqs    =
+    { "type", "name", "range"
+      "Building", "Palace", "City"
+    }
+
+[effect_2nd_palace_2_sabotage]
+type    = "Building_Saboteur_Resistant"
+value   = {{ sabotageResist.palace }}
+reqs    =
+    { "type", "name", "range", "present"
+      "Building", "Second Palace", "City", TRUE
+      "Building", "Palace", "City", FALSE
+    }
+
+[effect_academy2]
+type  = "Building_Saboteur_Resistant"
+value = {{ sabotageResist.academy }}
+reqs  =
+    { "type", "name", "range"
+       "Building", "Academy", "City"
+    }
+
+{% set oddsPct = options.espionage.oddsPct %}
+[effect_chance_steal_tech]
+type	= "Action_Odds_Pct"
+value	= {{ (oddsPct.stealTech) - 100 }}
+reqs	=
+    { "type",    "name",       "range", "present"
+      "Action",  "Steal Tech", "Local", TRUE
+    }
+
+[effect_chance_steal_tech_esc]
+type	= "Action_Odds_Pct"
+value	= {{ (oddsPct.stealTechEscape) - 100 }}
+reqs	=
+    { "type",    "name",       "range", "present"
+      "Action",  "Steal Tech Escape Expected", "Local", TRUE
+    }
+
+[effect_chance_tgt_steal_tech]
+type	= "Action_Odds_Pct"
+value	= {{ (oddsPct.stealSpecificTechEscape) - 100 }}
+reqs	=
+    { "type",    "name",       "range", "present"
+      "Action",  "Targeted Steal Tech Escape Expected", "Local", TRUE
+    }
+
+[effect_tgt_sabotage_city_half_chance]
+type	= "Action_Odds_Pct"
+value	= {{ (oddsPct.sabotageSpecificBuildingEscape) - 100 }}
+reqs	=
+    { "type", "name", "range", "present"
+      "Action", "Targeted Sabotage City Escape", "Local", TRUE
+    }
+
+[effect_sabotage_city_production_city_half_chance]
+type	= "Action_Odds_Pct"
+value	= {{ (oddsPct.sabotageProductionEscape) - 100 }}
+reqs	=
+    { "type", "name", "range", "present"
+      "Action", "Sabotage City Production Escape", "Local", TRUE
+    }
+
+[effect_incident_caught_steal_tech]
+type	= "Casus_Belli_Caught"
+value	= 1
+reqs	=
+    { "type",    "name",       "range", "present"
+      "Action",  "Steal Tech", "Local", TRUE
+      "DiplRel", "War",        "Local", FALSE
+    }
+
+[effect_incident_success_steal_tech]
+type	= "Casus_Belli_Success"
+value	= 1
+reqs	=
+    { "type",    "name",       "range", "present"
+      "Action",  "Steal Tech", "Local", TRUE
+      "DiplRel", "War",        "Local", FALSE
+    }
+
+[effect_incident_caught_steal_tech_esc]
+type	= "Casus_Belli_Caught"
+value	= 1
+reqs	=
+    { "type",    "name",                       "range", "present"
+      "Action",  "Steal Tech Escape Expected", "Local", TRUE
+      "DiplRel", "War",                        "Local", FALSE
+    }
+
+[effect_incident_success_steal_tech_esc]
+type	= "Casus_Belli_Success"
+value	= 1
+reqs	=
+    { "type",    "name",                       "range", "present"
+      "Action",  "Steal Tech Escape Expected", "Local", TRUE
+      "DiplRel", "War",                        "Local", FALSE
+    }
+
+[effect_incident_caught_tgt_steal_tech]
+type	= "Casus_Belli_Caught"
+value	= 1
+reqs	=
+    { "type",    "name",                                "range", "present"
+      "Action",  "Targeted Steal Tech Escape Expected", "Local", TRUE
+      "DiplRel", "War",                                 "Local", FALSE
+    }
+
+[effect_incident_success_tgt_steal_tech]
+type	= "Casus_Belli_Success"
+value	= 1
+reqs	=
+    { "type",    "name",                                "range", "present"
+      "Action",  "Targeted Steal Tech Escape Expected", "Local", TRUE
+      "DiplRel", "War",                                 "Local", FALSE
+    }
+
+[effect_incident_success_bribe_unit]
+type	= "Casus_Belli_Success"
+value	= 1
+reqs	=
+    { "type", "name", "range", "present"
+      "Action", "Bribe Unit", "Local", TRUE
+      "DiplRel", "War", "Local", FALSE
+    }
+
+[effect_incident_success_sabotage_unit]
+type	= "Casus_Belli_Success"
+value	= 1
+reqs	=
+    { "type", "name", "range", "present"
+      "Action", "Sabotage Unit Escape", "Local", TRUE
+      "DiplRel", "War", "Local", FALSE
+    }
+
+[effect_incident_success_incite]
+type	= "Casus_Belli_Success"
+value	= 1
+reqs	=
+    { "type", "name", "range", "present"
+      "Action", "Incite City", "Local", TRUE
+      "DiplRel", "War", "Local", FALSE
+    }
+
+[effect_incident_success_incite_esc]
+type	= "Casus_Belli_Success"
+value	= 1
+reqs	=
+    { "type", "name", "range", "present"
+      "Action", "Incite City Escape", "Local", TRUE
+      "DiplRel", "War", "Local", FALSE
+    }
+
+[effect_incident_success_poison]
+type	= "Casus_Belli_Success"
+value	= 1
+reqs	=
+    { "type", "name", "range", "present"
+      "Action", "Poison City Escape", "Local", TRUE
+      "DiplRel", "War", "Local", FALSE
+    }
+
+[effect_incident_success_sabotage_city]
+type	= "Casus_Belli_Success"
+value	= 1
+reqs	=
+    { "type", "name", "range", "present"
+      "Action", "Sabotage City", "Local", TRUE
+      "DiplRel", "War", "Local", FALSE
+    }
+
+[effect_incident_success_sabotage_city_esc]
+type	= "Casus_Belli_Success"
+value	= 1
+reqs	=
+    { "type", "name", "range", "present"
+      "Action", "Sabotage City Escape", "Local", TRUE
+      "DiplRel", "War", "Local", FALSE
+    }
+
+[effect_incident_success_tgt_sabotage_city]
+type	= "Casus_Belli_Success"
+value	= 1
+reqs	=
+    { "type", "name", "range", "present"
+      "Action", "Targeted Sabotage City Escape", "Local", TRUE
+      "DiplRel", "War", "Local", FALSE
+    }
+
+[effect_incident_success_sabotage_city_production]
+type	= "Casus_Belli_Success"
+value	= 1
+reqs	=
+    { "type", "name", "range", "present"
+      "Action", "Sabotage City Production Escape", "Local", TRUE
+      "DiplRel", "War", "Local", FALSE
+    }
+
+[effect_action_success_move_cost_embassy]
+type    = "Action_Success_Actor_Move_Cost"
+value   = 1
+reqs    =
+    { "type", "name", "range", "present"
+      "Action", "Establish Embassy", "Local", TRUE
+    }
+
+[effect_action_success_move_cost_investigate]
+type    = "Action_Success_Actor_Move_Cost"
+value   = 1
+reqs    =
+    { "type", "name", "range", "present"
+      "Action", "Investigate City", "Local", TRUE
+    }
+
+[effect_atlantic_telegraph_company]
+type    = "Have_Embassies"
+value   = 1
+reqs    =
+    { "type", "name", "range"
+      "Building", "Atlantic Telegraph Company", "World"
+    }
+
+[effect_atlantic_telegraph_company_3]
+type    = "Have_Contacts"
+value   = 1
+reqs    =
+    { "type", "name", "range"
+      "Building", "Atlantic Telegraph Company", "World"
+    }
+
+; Having contact with another player lets one see their score.
+[effect_ni_score_contact]
+type  = "Nation_Intelligence"
+value = 1
+reqs  =
+    { "type",                 "name",         "range",  "present"
+      "NationalIntelligence", "Score",        "Player", TRUE
+      "DiplRel",              "Has Contact",  "Local",  TRUE
+    }
+
+; Having an embassy lets one see almost everything. In fact, the things we
+; disable are not even shown in the client.
+[effect_ni_any_embassy]
+type  = "Nation_Intelligence"
+value = 1
+reqs  =
+    { "type",                 "name",         "range",  "present"
+      "NationalIntelligence", "Mood",         "Player", FALSE
+      "NationalIntelligence", "History",      "Player", FALSE
+      "DiplRel",              "Has embassy",  "Local",  TRUE
+    }
+

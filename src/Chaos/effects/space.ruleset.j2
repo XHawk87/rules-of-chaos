@@ -1,0 +1,32 @@
+[effect_space_component]
+type    = "SS_Component"
+value   = 1
+reqs    =
+    { "type", "name", "range"
+      "Building", "Space Component", "City"
+    }
+
+[effect_space_module]
+type    = "SS_Module"
+value   = 1
+reqs    =
+    { "type", "name", "range"
+      "Building", "Space Module", "City"
+    }
+
+[effect_space_structural]
+type    = "SS_Structural"
+value   = 1
+reqs    =
+    { "type", "name", "range"
+      "Building", "Space Structural", "City"
+    }
+
+[effect_apollo_program_1]
+type    = "Enable_Space"
+value   = 1
+reqs    =
+    { "type", "name", "range", "survives"
+      "Building", "Apollo Program", "World", TRUE
+    }
+

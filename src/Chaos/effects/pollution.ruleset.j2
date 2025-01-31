@@ -1,0 +1,213 @@
+{% set popPct = options.pollution.populationFactorPct -%}
+
+; No base pop pollution; buildings will increase it
+[effect_pollu_pop]
+type    = "Pollu_Pop_Pct"
+value   = {{ popPct.base }}
+
+[effect_factory_1]
+type    = "Pollu_Pop_Pct"
+value   = {{ popPct.factory }}
+reqs    =
+    { "type", "name", "range"
+      "Building", "Factory", "City"
+    }
+
+{% for gov in ["Monarchy", "Republic", "City States"] %}
+[effect_workshop_pollution_{{ gov | slugify }}]
+type    = "Pollu_Pop_Pct"
+value   = {{ popPct.workshop }}
+reqs    =
+    { "type", "name", "range"
+      "Gov", "{{ gov }}", "Player"
+      "Building", "Workshop", "City"
+    }
+{% endfor %}
+
+[effect_mfg_plant_1]
+type    = "Pollu_Pop_Pct"
+value   = {{ popPct.manufacturingPlant }}
+reqs    =
+    { "type", "name", "range"
+      "Building", "Mfg. Plant", "City"
+    }
+
+[effect_offshore_platform_2]
+type    = "Pollu_Pop_Pct"
+value   = {{ popPct.offshorePlatform }}
+reqs    =
+    { "type", "name", "range"
+      "Building", "Offshore Platform", "City"
+    }
+
+[effect_super_highways_3]
+type    = "Pollu_Pop_Pct"
+value   = {{ popPct.superHighways }}
+reqs    =
+    { "type", "name", "range"
+      "Building", "Super Highways", "City"
+    }
+
+; Counteracts population pollution from any 2 other buildings
+[effect_mass_transit]
+type    = "Pollu_Pop_Pct"
+value   = {{ popPct.massTransit }}
+reqs    =
+    { "type", "name", "range"
+      "Building", "Mass Transit", "City"
+    }
+
+[effect_eiffel_tower_1]
+type    = "Pollu_Pop_Pct"
+value   = {{ popPct.eiffelTower }}
+reqs    =
+    { "type", "name", "range"
+      "Building", "Eiffel Tower", "Player"
+    }
+
+[effect_The_paris_agreement_2]
+type    = "Pollu_Pop_Pct"
+value   = {{ popPct.parisAgreement }}
+reqs    =
+    { "type", "name", "range", "present"
+      "Building", "The Paris Agreement", "World", TRUE
+      "Building", "Global Emission Union", "World", FALSE
+      "Gov", "Communism", "Player", FALSE
+      "Gov", "Anarchy", "Player", FALSE
+      "Gov", "Fundamentalism", "Player", FALSE
+      "Gov", "City States", "Player", FALSE
+    }
+
+[effect_The_paris_agreement__2]
+type    = "Pollu_Pop_Pct"
+value   = {{ popPct.globalEmissionsUnion }}
+reqs    =
+    { "type", "name", "range", "present"
+      "Building", "Global Emission Union", "World", TRUE
+      "Gov", "Anarchy", "Player", FALSE
+    }
+
+{% set prodPct = options.pollution.productionFactorPct -%}
+
+[effect_recycling_center_base]
+type  = "Pollu_Prod_Pct"
+value = {{ prodPct.recyclingCentre.base }}
+reqs  = 
+    { "type",     "name",             "range"
+      "Building", "Recycling Center", "City"
+    }
+
+[effect_recycling_center_no_plants]
+type  = "Pollu_Prod_Pct"
+value = {{ prodPct.recyclingCentre.noPlants }}
+reqs  =
+    { "type",     "name",             "range", "present"
+      "Building", "Recycling Center", "City",  TRUE
+      "Building", "Solar Plant",      "City",  FALSE
+      "Building", "Nuclear Plant",    "City",  FALSE
+      "Building", "Hydro Plant",      "City",  FALSE
+      "Building", "Hoover Dam",       "City",  FALSE
+    }
+
+; Hoover Dam counts as a hydro plant in the city
+[effect_hoover_dam_2]
+type    = "Pollu_Prod_Pct"
+value   = {{ prodPct.hooverDam }}
+reqs    =
+    { "type", "name", "range"
+      "Building", "Hoover Dam", "City"
+    }
+
+[effect_solar_plant_2]
+type    = "Pollu_Prod_Pct"
+value   = {{ prodPct.solar }}
+reqs    =
+    { "type", "name", "range", "present"
+      "Building", "Solar Plant", "City", TRUE
+      "Building", "Hoover Dam", "City", FALSE ; superseded by hoover
+    }
+
+[effect_hydro_plant_2]
+type    = "Pollu_Prod_Pct"
+value   = {{ prodPct.hydro }}
+reqs    =
+    { "type", "name", "range", "present"
+      "Building", "Hydro Plant", "City", TRUE
+      "Building", "Solar Plant", "City", FALSE ; superseded by solar
+      "Building", "Hoover Dam", "City", FALSE ; superseded by hoover
+    }
+
+[effect_hydro_plant_4]
+type    = "Pollu_Prod_Pct"
+value   = {{ prodPct.hooverDamNation }}
+reqs    =
+    { "type", "name", "range", "present"
+      "Building", "Hoover Dam", "Player", TRUE
+      "Building", "Hydro Plant", "City", TRUE
+      "Building", "Solar Plant", "City", FALSE ; superseded by solar
+      "Building", "Hoover Dam", "City", FALSE ; superseded by hoover
+    }
+
+[effect_nuclear_plant_2]
+type    = "Pollu_Prod_Pct"
+value   = {{ prodPct.nuclear }}
+reqs    =
+    { "type", "name", "range", "present"
+      "Building", "Nuclear Plant", "City", TRUE
+      "Building", "Hydro Plant", "City", FALSE ; superseded by hydro
+      "Building", "Solar Plant", "City", FALSE ; superseded by solar
+      "Building", "Hoover Dam", "City", FALSE ; superseded by hoover
+    }
+
+{% if features.inaccessibleClimates.enabled %}
+
+[effect_pollution]
+type    = "Output_Add_Tile"
+value   = {{ features.inaccessibleClimates.pollutionProductionIncrease }}
+reqs    =
+    { "type", "name", "range", "present"
+      "Extra", "Pollution", "Local", TRUE
+      "OutputType", "Shield", "Local", TRUE
+    }
+
+[effect_fallout]
+type	= "Output_Tile_Punish_Pct"
+value	= {{ options.terrain.extras.falloutOutputPenaltyPct }}
+reqs	=
+    { "type", "name", "range", "present"
+      "Extra", "Fallout", "Local", TRUE
+    }
+
+{% else %}
+
+{% set pollution = options.terrain.extras.pollutionOutputPenaltyPct -%}
+[effect_pollution]
+type	= "Output_Tile_Punish_Pct"
+value	= {{ pollution }}
+reqs	=
+    { "type", "name", "range", "present"
+      "Extra", "Pollution", "Local", TRUE
+      "Extra", "Fallout", "Local", FALSE
+    }
+
+{% set fallout = options.terrain.extras.falloutOutputPenaltyPct -%}
+[effect_fallout]
+type	= "Output_Tile_Punish_Pct"
+value	= {{ fallout }}
+reqs	=
+    { "type", "name", "range", "present"
+      "Extra", "Fallout", "Local", TRUE
+      "Extra", "Pollution", "Local", FALSE
+    }
+
+[effect_pollution_fallout]
+type	= "Output_Tile_Punish_Pct"
+value	= {{ 100 - (((100 - pollution) * (100 - fallout)) / 100) }}
+reqs	=
+    { "type", "name", "range"
+      "Extra", "Fallout", "Local"
+      "Extra", "Pollution", "Local"
+    }
+
+{% endif %}
+

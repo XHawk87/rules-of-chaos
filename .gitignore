@@ -16,3 +16,4 @@ freeciv-score.log
 __pycache__/
 game/
 .idea/
+config.json

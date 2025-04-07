@@ -1,5 +1,5 @@
 {% if options.civilWar.enabled -%}
-{% for gov, chancePct in options.civilWar.governmentChanceModifierPct.items() %}
+{% for gov, chancePct in options.civilWar.governmentChanceModifierPct | items %}
 [effect_civil_war_{{ gov | slugify }}]
 type    = "Civil_War_Chance"
 value   = {{ chancePct }}
@@ -10,7 +10,7 @@ reqs    =
 {% endfor %}
 {%- endif %}
 
-{% for gov, maxRatesPct in options.governance.maxSliderRatesPct.items() %}
+{% for gov, maxRatesPct in options.governance.maxSliderRatesPct | items %}
 [effect_max_rates_{{ gov | slugify }}]
 type    = "Max_Rates"
 value   = {{ maxRatesPct }}
@@ -20,7 +20,7 @@ reqs    =
     }
 {% endfor %}
 
-{% for gov in options.governance.senate.goverments %}
+{% for gov in options.governance.senate.governments %}
 [effect_senate_{{ gov | slugify }}]
 type    = "Has_Senate"
 value   = 1
@@ -85,7 +85,7 @@ reqs    =
 
 {% set disorder = options.governance.revolution.disorderForcesAnarchy -%}
 {% if disorder.enabled -%}
-{% for gov, turns in disorder.turnsByGovernment.items() -%}
+{% for gov, turns in disorder.turnsByGovernment | items -%}
 [effect_revolution_{{ gov | slugify }}]
 type    = "Revolution_Unhappiness"
 value   = {{ turns }}

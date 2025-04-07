@@ -30,3 +30,15 @@ def to_lua(obj):
 
 def slugify(value):
     return str(value).lower().replace(" ", "_")
+
+
+def add_req(reqs, rtype, name, rrange, present=None, survives=None, quiet=None):
+    _req = {"type": rtype, "name": name, "range": rrange}
+    if present is not None:
+        _req["present"] = present
+    if survives is not None:
+        _req["survives"] = present
+    if quiet is not None:
+        _req["quiet"] = present
+    reqs.append(_req)
+    return reqs

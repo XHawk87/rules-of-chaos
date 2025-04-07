@@ -1,6 +1,4 @@
 {% set bases = options.terrain.bases -%}
-{% set cities = options.cities.defence -%}
-{% set units = options.units -%}
 ; No defense bonus from Pre-Fortress, Fortress only helps against Land and Sea units
 [effect_fort_defense]
 type    = "Defend_Bonus"
@@ -21,6 +19,7 @@ reqs    =
       "UnitClassFlag", "Air", "Local", TRUE
     }
 
+{% set units = options.units -%}
 [effect_fortified]
 type    = "Fortify_Defense_Bonus"
 value   = {{ units.fortifyDefenceBonus }}
@@ -42,39 +41,7 @@ reqs    =
     }
 {%- endif %}
 
-
-; Every Land
-[effect_city_defense_0]
-type    = "Defend_Bonus"
-value   = {{ cities.cityDefenceBonus }}
-reqs    =
-    { "type", "name", "range", "present"
-      "CityTile", "Center", "Local", TRUE
-      "UnitClassFlag", "Land", "Local", TRUE
-    }
-
-; Every Land, Sea, Trireme
-[effect_city_defense_1]
-type    = "Defend_Bonus"
-value   = {{ cities.size9CityDefenceBonus }}
-reqs    =
-    { "type", "name", "range", "present"
-      "MinSize", "9", "City", TRUE
-      "CityTile", "Center", "Local", TRUE
-      "UnitClassFlag", "Air", "Local", FALSE
-    }
-
-; Every Land
-[effect_city_walls_0]
-type    = "Defend_Bonus"
-value   = {{ cities.cityWallsBonus }}
-reqs    =
-    { "type", "name", "range", "present"
-      "Building", "City Walls", "City", TRUE
-      "UnitClassFlag", "Land", "Local", TRUE
-    }
-
-{% if cities.onDefenderKilled.cityWallsPreventsCitizenLoss -%}
+{% if options.cities.defence.onDefenderKilled.cityWallsPreventsCitizenLoss -%}
 [effect_city_walls_1]
 type    = "Unit_No_Lose_Pop"
 value   = 1
@@ -82,7 +49,7 @@ reqs    =
     { "type", "name", "range"
       "Building", "City Walls", "City"
     }
-    
+
 [effect_great_wall_1]
 type    = "Unit_No_Lose_Pop"
 value   = 1
@@ -91,107 +58,4 @@ reqs    =
       "Building", "Great Wall", "Player"
     }
 {%- endif %}
-
-[effect_coastal_defense]
-type    = "Defend_Bonus"
-value   = {{ cities.coastalDefenceBonus }}
-reqs    =
-    { "type", "name", "range"
-      "Building", "Coastal Defense", "City"
-      "UnitClass", "Sea", "Local"
-    }
-
-[effect_coastal_defense_trireme]
-type    = "Defend_Bonus"
-value   = {{ cities.coastalDefenceBonus }}
-reqs    =
-    { "type", "name", "range"
-      "Building", "Coastal Defense", "City"
-      "UnitClass", "Trireme", "Local"
-    }
-
-[effect_sam_battery]
-type    = "Defend_Bonus"
-value   = {{ cities.samDefenceBonus }}
-reqs    =
-    { "type", "name", "range"
-      "Building", "SAM Battery", "City"
-      "UnitClass", "Air", "Local"
-    }
-
-[effect_sam_battery_1]
-type    = "Defend_Bonus"
-value   = {{ cities.samDefenceBonus }}
-reqs    =
-    { "type", "name", "range"
-      "Building", "SAM Battery", "City"
-      "UnitClass", "Helicopter", "Local"
-    }
-
-[effect_sdi_i_missile_defense]
-type    = "Defend_Bonus"
-value   = {{ cities.sdiDefenceBonus }}
-reqs    =
-    { "type",      "name",            "range", "present"
-      "Building",  "SDI Defense I",   "City",  TRUE
-	  "Building",  "SDI Defense II",  "City",  FALSE
-	  "Building",  "SDI Defense III", "City",  FALSE
-	  "Building",  "Palace",          "City",  FALSE
-      "UnitClass", "Missile",         "Local", TRUE
-    }
-
-[effect_sdi_i_palace_missile_defense]
-type    = "Defend_Bonus"
-value   = {{ cities.sdiPalaceDefenceBonus }}
-reqs    =
-    { "type",      "name",            "range", "present"
-      "Building",  "SDI Defense I",   "City",  TRUE
-	  "Building",  "Palace",          "City",  TRUE
-      "UnitClass", "Missile",         "Local", TRUE
-    }
-
-[effect_sdi_ii_missile_defense]
-type    = "Defend_Bonus"
-value   = {{ cities.sdi2DefenceBonus }}
-reqs    =
-    { "type",      "name",            "range", "present"
-      "Building",  "SDI Defense II",  "City",  TRUE
-	  "Building",  "SDI Defense III", "City",  FALSE
-      "Building",  "Palace",          "City",  FALSE
-      "UnitClass", "Missile",         "Local", TRUE
-    }
-
-[effect_sdi_iii_missile_defense]
-type    = "Defend_Bonus"
-value   = {{ cities.sdi3DefenceBonus }}
-reqs    =
-    { "type",      "name",            "range", "present"
-      "Building",  "SDI Defense III", "City",  TRUE
-      "Building",  "Palace",          "City",  FALSE
-      "UnitClass", "Missile",         "Local", TRUE
-    }
-
-; Every Land unit
-[effect_great_wall]
-type    = "Defend_Bonus"
-value   = {{ cities.greatWallDefenceBonus }}
-reqs    =
-    { "type", "name", "range", "present"
-      "Building", "Great Wall", "Player", TRUE
-      "CityTile", "Center", "Local", TRUE
-      "UnitClassFlag", "Land", "Local", TRUE
-    }
-
-{% for gov in options.cities.onCityLost.inspirePartisans -%}
-[effect_partisan_{{ gov | slugify }}]
-type    = "Inspire_Partisans"
-value   = 1
-reqs    =
-    { "type", "name", "range", "present"
-      "Gov", "{{ gov }}", "Player", TRUE
-      "Tech", "Conscription", "Player", TRUE
-      "Tech", "Leadership", "World", TRUE
-      "NationGroup", "Barbarian", "Player", FALSE
-    }
-{% endfor %}
 

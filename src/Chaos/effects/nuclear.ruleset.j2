@@ -1,5 +1,4 @@
 {% set nuke = options.units.nuclear -%}
-{% set sdiPct = options.cities.nuclearDefencePct -%}
 
 [effect_nuke_improvement_pct]
 type    = "Nuke_Improvement_Pct"
@@ -9,40 +8,12 @@ value   = {{ nuke.improvementDestroyedChancePct }}
 type    = "Nuke_Infrastructure_Pct"
 value   = {{ nuke.terrainInfrastructureDestroyedChancePct }}
 
-[effect_sdi_i_defense_1]
+{% for name, effect in options.cities.nuclearDefence | items %}
+[effect_sdi_{{ name | slugify }}]
 type    = "Nuke_Proof"
-value   = {{ sdiPct.sdi1 }}
-reqs    =
-    { "type", "name", "range", "present"
-      "Building", "SDI Defense I", "City", TRUE
-    }
-
-[effect_sdi_i_defense_2]
-type    = "Nuke_Proof"
-value   = {{ sdiPct.sdiPalace }}
-reqs    =
-    { "type", "name", "range"
-      "Building", "SDI Defense I", "City"
-	  "Building", "Palace", "City"
-    }
-
-[effect_sdi_ii_defense_1]
-type    = "Nuke_Proof"
-value   = {{ sdiPct.sdi2 }}
-reqs    =
-    { "type", "name", "range", "present"
-      "Building", "SDI Defense II", "City", TRUE
-	  "Building", "Palace", "City", FALSE
-    }
-
-[effect_sdi_iii_defense_1]
-type    = "Nuke_Proof"
-value   = {{ sdiPct.sdi3 }}
-reqs    =
-    { "type", "name", "range", "present"
-      "Building", "SDI Defense III", "City", TRUE
-      "Building", "Palace", "City", FALSE
-    }
+value   = {{ effect.value }}
+{{ requirements(effect.reqs) }}
+{% endfor %}
 
 {% if features.explosiveExpansion.enabled -%}
 [effect_nukes_from_start]

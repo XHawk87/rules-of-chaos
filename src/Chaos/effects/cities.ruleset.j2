@@ -16,23 +16,6 @@ reqs    =
       "TerrainFlag", "Unworkable", "Local", TRUE
     }
 
-{% set batch = options.cities.production.unitBatchProduction -%}
-{% if batch.enabled -%}
-; each city has at least one slot to build units
-[effect_city_build_slots_basic]
-type    = "City_Build_Slots"
-value   = {{ batch.baseBatchSize }}
-
-; Mfg. Plant => 4 slots total
-[effect_city_build_slots_mfg_plant]
-type    = "City_Build_Slots"
-value   = {{ batch.manufacturingPlantBonus }}
-reqs    =
-    { "type", "name", "range"
-      "Building", "Mfg. Plant", "City"
-    }
-{%- endif %}
-
 ; free granary, etc, runs out
 [effect_city_image_1]
 type    = "City_Image"
@@ -79,22 +62,9 @@ reqs    =
 {% set workRadiusSq = options.cities.workRadiusSq -%}
 ; City radius at start = {{ workRadiusSq.initial }}
 
-; City radius increased with Mass Transit before Theology
-[effect_mass_transit_work_area]
+{% for name, effect in workRadiusSq.bonuses | items %}
+[effect_work_area_{{ name | slugify }}]
 type    = "City_Radius_Sq"
-value   = {{ workRadiusSq.massTransitBonus }}
-reqs    =
-    { "type",     "name",         "range",  "present"
-      "Building", "Mass Transit", "City",   TRUE
-    }
-
-; City radius increased after Theology
-[effect_theology_work_area]
-type    = "City_Radius_Sq"
-value   = {{ workRadiusSq.theologyBonus }}
-reqs    =
-    { "type",     "name",         "range",  "present"
-      "Tech",     "Theology",     "Player", TRUE
-    }
-
-
+value   = {{ effect.value }}
+{{ requirements(effect.reqs) }}
+{% endfor %}

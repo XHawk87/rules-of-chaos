@@ -49,36 +49,23 @@ reqs    =
       "VisionLayer", "Subsurface", "Local"
     }
 
+{% set workRadiusSq = options.cities.workRadiusSq -%}
 ; AI cities can see working area since they're too stupid to post units
 [effect_blind_ai_city_vision]
 type    = "City_Vision_Radius_Sq"
-value   = {{ options.cities.workRadiusSq.initial }}
-reqs    = 
+value   = {{ workRadiusSq.initial }}
+reqs    =
     { "type",        "name", "range"
       "VisionLayer", "Main", "Local"
       "AI",          "Hard", "Player"
     }
 
-[effect_blind_ai_city_theology_vision]
+{% for name, effect in workRadiusSq.bonuses | items %}
+[effect_blind_ai_city_vision_{{ name | slugify }}]
 type    = "City_Vision_Radius_Sq"
-value   = {{ options.cities.workRadiusSq.theologyBonus }}
-reqs    = 
-    { "type",        "name",     "range"
-      "VisionLayer", "Main",     "Local"
-      "AI",          "Hard",     "Player"
-      "Tech",        "Theology", "Player"
-    }
-
-; AI cities can see working area since they're too stupid to post units
-[effect_blind_ai_city_mass_transit_vision]
-type    = "City_Vision_Radius_Sq"
-value   = {{ options.cities.workRadiusSq.massTransitBonus }}
-reqs    = 
-    { "type",        "name",         "range"
-      "VisionLayer", "Main",         "Local"
-      "AI",          "Hard",         "Player"
-      "Building",    "Mass Transit", "City"
-    }
+value   = {{ effect.value }}
+{{ requirements(effect.reqs) }}
+{% endfor %}
 
 [effect_apollo_program]
 type    = "Reveal_Map"

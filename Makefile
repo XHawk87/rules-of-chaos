@@ -1,6 +1,9 @@
 # Define variables
 RULESET_NAME = Chaos
-CONFIG_JSON = game.json
+PROJECT_JSON = project.json
+GAME_JSON = game.json
+CONFIG_JSON = config.json
+CONFIG_GENERATOR = generate-config.py
 FILTERS = filters.py
 TESTS = tests.py
 J2_DEPS = $(CONFIG_JSON) $(FILTERS) $(TESTS)
@@ -28,6 +31,9 @@ build: $(DEST_DIR) $(DEST_FILES)
 clean: $(DEST_DIR)
 	rm --verbose --recursive --force $(DEST_DIR)
 
+randomise:
+	rm --verbose --force $(CONFIG_JSON)
+
 clean-build: clean build
 
 run-local: build
@@ -42,6 +48,11 @@ SCRIPTS = $(shell find $(INCLUDES_DIR)/scripts/ -mindepth 1 -type f)
 $(DEST_DIR)/$(RULESET_NAME)/script.lua: $(SRC_DIR)/$(RULESET_NAME)/script.lua.j2 $(DEST_DIR) $(J2_DEPS) $(SCRIPTS)
 	@mkdir --verbose --parents $(dir $@)
 	$(J2CLI)
+
+$(CONFIG_JSON): $(PROJECT_JSON) $(GAME_JSON) $(CONFIG_GENERATOR)
+	PROJECT_JSON=$(PROJECT_JSON) \
+	GAME_JSON=$(GAME_JSON) \
+	CONFIG_JSON=$(CONFIG_JSON) ./$(CONFIG_GENERATOR)
 
 $(DEST_DIR)/%: $(SRC_DIR)/%.j2 $(DEST_DIR) $(J2_DEPS)
 	@mkdir --verbose --parents $(dir $@)

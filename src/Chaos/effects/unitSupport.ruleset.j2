@@ -1,5 +1,5 @@
 {% set upkeep = options.units.upkeep -%}
-{% for gov, factor in upkeep.byGov.items() %}
+{% for gov, factor in upkeep.byGov | items %}
 [effect_base_unit_upkeep_gold_{{ gov | slugify }}]
 type    = "Upkeep_Factor"
 value   = {{ factor.multiplier.gold }}
@@ -34,7 +34,7 @@ reqs    =
       "Gov", "{{ gov }}", "Player", FALSE
     }
 
-{% for size, content in factor.freePerCity.fromSize.happiness.items() %}
+{% for size, content in factor.freePerCity.fromSize.happiness | items %}
 [effect_upkeep_free_mil_city_{{ gov | slugify }}_from{{ size }}]
 type    = "Make_Content_Mil"
 value   = {{ content }}
@@ -55,7 +55,7 @@ reqs    =
     }
 
 {% set shieldsFromSize = factor.freePerCity.fromSize.shields | default(upkeep.freePerCity.fromSize.shields) %}
-{% for size, shields in shieldsFromSize.items() %}
+{% for size, shields in shieldsFromSize | items %}
 [effect_free_shield_upkeep_{{ gov | slugify }}_from{{ size }}]
 type    = "Unit_Upkeep_Free_Per_City"
 value   = {{ shields }}
@@ -68,7 +68,7 @@ reqs    =
 {% endfor %}
 
 {% set goldFromSize = factor.freePerCity.fromSize.gold | default(upkeep.freePerCity.fromSize.gold) %}
-{% for size, gold in goldFromSize.items() %}
+{% for size, gold in goldFromSize | items %}
 [effect_upkeep_free_units_{{ gov | slugify }}_from{{ size }}]
 type  = "Unit_Upkeep_Free_Per_City"
 value = {{ gold }}

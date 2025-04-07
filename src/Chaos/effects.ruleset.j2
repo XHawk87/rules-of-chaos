@@ -38,10 +38,57 @@ format_version=20
 ;
 ; */ <-- avoid gettext warnings
 
+{%- macro build_string_list() -%}
+    "{{ varargs | select("ne", "") | join('", "') }}"
+{%- endmacro -%}
+
+{%- macro generic_req(req, show_present, show_quiet, show_survives) -%}
+    "{{ req.type }}", "{{ req.name }}", "{{ req.range }}"
+    {%- if show_present | default(false) -%}
+        , {{ req.present | default(true) | tostring | upper }}
+    {%- endif -%}
+    {%- if show_quiet | default(false) -%}
+        , {{ req.quiet | default(false) | tostring | upper }}
+    {%- endif -%}
+    {%- if show_survives | default(false) -%}
+        , {{ req.survives | default(false) | tostring | upper }}
+    {%- endif -%}
+{%- endmacro -%}
+
+{%- macro requirements(reqs) %}
+{%- if reqs is defined -%}
+{%- set show_present = effect.reqs | selectattr("present", "defined") | any -%}
+{%- set show_quiet = effect.reqs | selectattr("quiet", "defined") | any -%}
+{%- set show_survives = effect.reqs | selectattr("survives", "defined") | any -%}
+reqs =
+    { {{ build_string_list(
+        "type", "name", "range",
+        "present" if show_present else "",
+        "quiet" if show_quiet else "",
+        "survives" if show_survives else ""
+    ) }}
+{%- for req in effect.reqs %}
+      {{ generic_req(req, show_present, show_quiet, show_survives) }}
+{% endfor %}
+    }
+{% endif -%}
+{%- endmacro -%}
+
+{%- macro generic_effect(effect) %}
+[effect_{{ effect.name | slugify }}]
+type = "{{ effect.etype }}"
+value = {{ effect.value }}
+{%- if effect.multiplier is defined %}
+multiplier = "{{ effect.multiplier }}
+{% endif -%}
+{{ requirements(effect.reqs) }}
+{% endmacro %}
+
+{# TODO generic effects list #}
+
 *include "Chaos/effects/ai.ruleset"
 *include "Chaos/effects/chronology.ruleset"
 *include "Chaos/effects/cities.ruleset"
-*include "Chaos/effects/combat.ruleset"
 *include "Chaos/effects/culture.ruleset"
 *include "Chaos/effects/defence.ruleset"
 *include "Chaos/effects/espionage.ruleset"
@@ -50,7 +97,6 @@ format_version=20
 *include "Chaos/effects/governance.ruleset"
 *include "Chaos/effects/growth.ruleset"
 *include "Chaos/effects/happiness.ruleset"
-*include "Chaos/effects/healing.ruleset"
 *include "Chaos/effects/illness.ruleset"
 *include "Chaos/effects/movement.ruleset"
 *include "Chaos/effects/nuclear.ruleset"

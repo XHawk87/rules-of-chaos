@@ -40,12 +40,33 @@ function space_exodus:save_score(player, score)
       string.format("%d=%d", player.id, score)
 end
 
+function space_exodus:player_final_score(player)
+  if not space_exodus_scores then return nil end
+  for id, score in string.gmatch(space_exodus_scores, "(%d+)=(%d+)") do
+    if player.id == tonumber(id) then
+      return tonumber(score)
+    end
+  end
+  return nil
+end
+
+-- Fix for city removal timing out on exodus
+function space_exodus_city_leaves()
+  for player in players_iterate() do
+    if space_exodus:player_final_score(player) then
+      for city in player:cities_iterate() do
+        city:remove()
+        return
+      end
+    end
+  end
+end
+
+signal.connect("pulse", "space_exodus_city_leaves")
+
 function space_exodus:exodus(player)
   for unit in player:units_iterate() do
     unit:kill("disbanded")
-  end
-  for city in player:cities_iterate() do
-    city:remove()
   end
 end
 
